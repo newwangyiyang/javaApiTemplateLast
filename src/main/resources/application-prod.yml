@@ -1,0 +1,4 @@
+logging:
+  level:
+    root: error
+    cn.yiyang: info

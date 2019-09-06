@@ -1,0 +1,146 @@
+server:
+  #设置端口号
+  port: 8080
+  servlet:
+    session:
+      timeout: 1800s
+  tomcat:
+    max-threads: 1000
+    min-spare-threads: 30
+    uri-encoding: UTF-8
+
+
+
+spring:
+  jackson:
+      time-zone: GMT+8
+      date-format: yyyy-MM-dd HH:mm:ss
+  #设置运行环境
+  profiles:
+    active: dev
+  #上传文件大小限制
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  devtools:
+    restart:
+      enabled: true
+  freemarker:
+      template-loader-path: classpath:/template/
+      cache: false
+      charset: UTF-8
+      check-template-location: true
+      content-type: text/html; charset=utf-8
+      expose-request-attributes: true
+      expose-session-attributes: true
+      request-context-attribute: request
+  #指定上传图片静态文件的位置，用于通过url精心访问
+  mvc:
+    throw-exception-if-no-handler-found: true
+#    static-path-pattern: /**
+  resources:
+      add-mappings: false
+#      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-path}
+#      static-locations: file:${web.upload-path}
+#      当设置了add-mappings: false, 这里的static-locations和static-path-pattern无效
+#      设置add-mappings(取消静态文件映射)的目的是检测404接口
+
+#####################druid跟redis配置
+---
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    initialSize: 1
+    minIdle: 3
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,slf4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 合并多个DruidDataSource的监控数据
+    #useGlobalDataSourceStat: true
+  redis:
+    # 连接超时时间（毫秒）
+    timeout: 10000ms
+    timeout-num: 10000
+    jedis:
+      pool:
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 10
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 100
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池最大阻塞等待时间（数字类型）
+        max-wait-num: -1
+      database: 0
+  freemarker:
+    check-template-location: false
+
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔,  XML 中调用的时候不用包含包名
+  type-aliases-package: cn.yiyang.entity
+  global-config:
+    db-config:
+      # 开启大写命名，默认不开启
+      capital-mode: false
+      # 全局默认主键类型
+      id-type: id_worker
+      # 表名、是否使用下划线命名，默认数据库表使用下划线命名
+      table-underline: true
+      #该策略约定了如何产出注入的sql,涉及insert,update以及wrapper内部的entity属性生成的 where 条件
+      field-strategy: not_null
+      # 逻辑删除
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+
+#swagger
+swagger:
+  base:
+    package: cn.yiyang
+  contact:
+    email: newwangyiyang@163.com
+    name: wangyiyang
+    url: ''
+  description: ''
+  title: yiyang
+  url: ''
+  version: 1.0
+
+#定义上传文件的路径
+web:
+  upload-path: D:/pic/upload/
+
+############################ wx配置
+wx:
+  mp:
+    configs:
+      - appId: 111
+        secret: 111
+        token: 111
+        aesKey: 111
+
